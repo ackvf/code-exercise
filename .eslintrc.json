@@ -1,3 +1,50 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "import/order": ["warn", {
+      "alphabetize": {
+        "order": "asc",
+        "caseInsensitive": true
+      },
+      "newlines-between": "always",
+      "distinctGroup": false,
+      "groups": ["builtin", "external", "internal", ["parent", "sibling", "index"]],
+      "pathGroupsExcludedImportTypes": [],
+      "pathGroups": [
+        {
+          "pattern": "react",
+          "group": "external",
+          "position": "before"
+        },
+        {
+          "pattern": "{@/ui,@/ui/**}",
+          "group": "internal",
+          "position": "after"
+        },
+        {
+          "pattern": "@/**",
+          "group": "internal"
+        },
+        {
+          "pattern": "../**",
+          "group": "parent",
+          "position": "before"
+        },
+        {
+          "pattern": "{./,.}",
+          "group": "index",
+          "position": "after"
+        }
+      ]
+    }],
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "inline-type-imports",
+        "disallowTypeAnnotations": false
+      }
+    ]
+  }
 }
