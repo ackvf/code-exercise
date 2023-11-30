@@ -7,8 +7,8 @@ import { ListSkeleton, Pen } from '@/ui'
 
 interface SeatAllocationFormProps {
   loading?: boolean
-  initialCategories: Array<string | Category>
-  onChange?: (seatEntries: SeatEntryState) => void
+  initialCategories: Category[]
+  onChange?: (seatEntries: SeatAllocationFormState) => void
 }
 
 export interface Category {
@@ -16,13 +16,13 @@ export interface Category {
   seats: number
 }
 
-export interface SeatEntryState {
+export interface SeatAllocationFormState {
   [key: Category['name']]: Category['seats']
 }
 
 export const SeatAllocationForm: React.FC<SeatAllocationFormProps> = ({ loading, ...props }) =>
   loading
-    ? <ListSkeleton className="w-[253px] m-2 p-3 pt-[2px] [&>div]:pt-3 space-y-3" rows={3} />
+    ? <ListSkeleton className="w-[253px]" rows={3} />
     : <SeatAllocationFormComponent {...props} />
 
 export default SeatAllocationForm
@@ -36,17 +36,13 @@ const SeatAllocationFormComponent: React.FC<SeatAllocationFormProps> = ({ initia
     onChange?.(refState.current)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const initialCategories = useMemo(() => categories.reduce((acc, category) => {
-    if (typeof category === 'string') return { ...acc, [category]: 0 }
-    return { ...acc, [category.name]: category.seats }
-  }, {} as SeatEntryState), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const initialCategories = useMemo(() => categories.reduce((acc, category) =>
+    ({ ...acc, [category.name]: category.seats }), {} as SeatAllocationFormState), []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const emptyCategories = useMemo(() => categories.reduce((acc, category) => {
-    if (typeof category === 'string') return { ...acc, [category]: 0 }
-    return { ...acc, [category.name]: 0 }
-  }, {} as SeatEntryState), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const emptyCategories = useMemo(() => categories.reduce((acc, category) =>
+    ({ ...acc, [category.name]: 0 }), {} as SeatAllocationFormState), []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [formState, { onNumberInputChange }, , refState] = useFormState<SeatEntryState>(emptyCategories, initialCategories, {
+  const [formState, { onNumberInputChange }, , refState] = useFormState<SeatAllocationFormState>(emptyCategories, initialCategories, {
     onChange(state, field) { if (state[field] < 0) state[field] = 0 },
   })
 
@@ -56,11 +52,11 @@ const SeatAllocationFormComponent: React.FC<SeatAllocationFormProps> = ({ initia
 
   const rows = useMemo(() =>
     Object.entries(formState).map(([name, value], i) =>
-      <Row key={name} {...{ name, value, percent: Math.round(100 * value / total), onChange: onNumberInputChange }} />
+      <Row key={name} {...{ name, value, percent: Math.round(100 * value / total) || 0, onChange: onNumberInputChange }} />
     ), [formState, total, onNumberInputChange])
 
   return (
-    <div id="SeatAllocationForm" className="w-[253px] p-2 flex flex-col gap-2">
+    <div id="SeatAllocationForm" className="w-[253px] m-2 flex flex-col gap-2">
       <div className="flex gap-[5px]">
         <div className="grow flex flex-col gap-[10px]">
           {rows}

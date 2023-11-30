@@ -1,3 +1,5 @@
+export * from './BarChart'
+export * from './BarSkeleton'
 export * from './Dropdown'
 export * from './LineSkeleton'
 export * from './ListSkeleton'

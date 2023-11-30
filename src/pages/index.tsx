@@ -11,7 +11,11 @@ const emptyData = {
 }
 
 const mockData = {
-  seatCategories: ['A', 'B', { name: 'C', seats: 100 }] as Array<string | Category>,
+  seatCategories: [
+    { name: 'A', seats: 0 },
+    { name: 'B', seats: 0 },
+    { name: 'C', seats: 100 }
+  ] satisfies Category[],
   lastUpdateTime: '1/24/22 at 10:31 am',
 }
 
@@ -22,7 +26,7 @@ const HomePage: NextPage = () => {
     sleepResolve(2000, mockData).then(setData)
   }, [])
 
-/* /-- */
+  /* /-- */
 
   const [isFakingLoading, toggleFakeLoading] = useToggle(null)
   const toggleData = isFakingLoading ? emptyData : mockData

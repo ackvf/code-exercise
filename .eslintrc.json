@@ -2,6 +2,8 @@
   "extends": "next/core-web-vitals",
   "plugins": ["@typescript-eslint"],
   "rules": {
+    "no-shadow": "warn",
+    "@typescript-eslint/no-shadow": "warn",
     "import/order": ["warn", {
       "alphabetize": {
         "order": "asc",
